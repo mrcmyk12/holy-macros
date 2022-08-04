@@ -15,14 +15,13 @@ export const fetchFoods = (searchTerm) => {
 				}
 			}
 		)
-      dispatch({ type: "SEARCHED_FOODS", payload: response })
+      dispatch({ type: "SEARCHED_FOODS", payload: response.data })
 	};
 };
 
 export const searchedFood = (food) => {
-	console.log(food);
 	return {
-		type: "SEARCHED_FOOD",
-		payload: searchedFood
+		type: "SEARCHED_FOODS",
+		payload: food
 	};
 };

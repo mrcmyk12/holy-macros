@@ -1,38 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { fetchFoods, searchedFood } from "../actions";
 import { Field, reduxForm } from "redux-form";
-import FetchFoods from "./RenderFoods";
+import RenderFoods from "./RenderFoods";
 import axios from "axios";
 
+const Search = ({ searchedFood, foods }) => {
+	const [value, setValue] = useState([]);
+	const [foodResults, setFoodResults] = useState("");
 
-
-const Search = ({ fetchFoods }) => {
-	const [value, setValue] = useState("");
+	const handleChange = (e) => {
+		setValue(e.target.value);
+	};
 
 	const handleSubmit = (e) => {
+		console.log(value);
+		e.preventDefault();
 		axios
 			.get(
-				`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=bnmAHdhHqxvoSOhbcpPgVTLBj66GdZ9I1jtEw7Di`,
-				{},
-				{
-					params: {
-						query: value
-					}
-				}
+				`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=bnmAHdhHqxvoSOhbcpPgVTLBj66GdZ9I1jtEw7Di&query=${value}`
 			)
 			.then(function (response) {
-				searchedFood(response);
-            console.log(response)
+				searchedFood(response.data);
+				setFoodResults(response.data);
 			});
-
 	};
 
 	return (
 		<div>
-			<form onSubmit={() => handleSubmit()}>
-				<input value={value} onChange={(e) => setValue(e.target.value)} />
+			<form onSubmit={(e) => handleSubmit(e)}>
+				<input value={value} onChange={(e) => handleChange(e)} />
 			</form>
+			<div className="row">Search Results:</div>
+			<RenderFoods foodResults={foodResults} />
 		</div>
 	);
 };
@@ -44,41 +44,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-	searchedFood: searchedFood,
-	fetchFoods: fetchFoods
+	searchedFood: searchedFood
 })(Search);
-
-//    renderInput({input,label}){
-//       return(
-//          <div className="col-5 mb-5">
-//             <label>Search Foods</label>
-//             <input placeholder="Search Foods" className="form-control" {...input} />
-//          </div>
-//       )
-//    }
-
-//    onSubmit(searchTerm){
-//       axios.get(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=bnmAHdhHqxvoSOhbcpPgVTLBj66GdZ9I1jtEw7Di`,{},{
-//          params:{
-//             query: searchTerm
-//          }
-//       })
-//          .then(function(response){
-//             console.log(response)
-//          })
-
-//    }
-
-//    render(){
-//       console.log(this.props)
-//       return(
-//          <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-//             <Field name="searchTerm"  component={this.renderInput}/>
-//          </form>
-//       )
-//    }
-// }
-
-// export default reduxForm({
-//    form: "search",
-// })(Search)

@@ -60,8 +60,6 @@ const Diary = () => {
 				</div>
 			</div>
 			<Search />
-			<div className="row">Search Results:</div>
-			<RenderFoods />
 		</div>
 	);
 };
