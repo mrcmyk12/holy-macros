@@ -1,161 +1,52 @@
-import React from "react";
+import React,{useState} from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios'
+import {connect} from 'react-redux'
+
+import {searchedFood} from '../actions'
+import RenderFoods from "./RenderFoods";
 
 const AddIngredient = () => {
+	const [value, setValue] = useState([]);
+	const [foodResults, setFoodResults] = useState("");
+
+	const handleChange = (e) => {
+		setValue(e.target.value);
+	};
+
+	const handleSubmit = (e) => {
+		console.log(value);
+		e.preventDefault();
+		axios
+			.get(
+				`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=bnmAHdhHqxvoSOhbcpPgVTLBj66GdZ9I1jtEw7Di&query=${value}`
+			)
+			.then(function (response) {
+				searchedFood(response.data);
+				setFoodResults(response.data);
+			});
+	};
+
 	return (
 		<div className="container">
-			<form>
-				<div className="row">
-					<p>Search Ingredients</p>
-				</div>
-				<div className="row">
-					<div className="col-6">
-						<input
-							placeholder="Search Foods eg.(Rice, Tofu, Lettuce)"
-							className="form-control"
-							type={"text"}
-						/>
-					</div>
-					<div className="col-2">
-						<input
-							className="form-control btn btn-primary"
-							type={"submit"}
-						/>
-					</div>
-				</div>
+			<div className="row"><p>Search Food</p></div>
+			<form onSubmit={(e) => handleSubmit(e)}>
+				<input placeholder="Search Foods here eg.(Cheese, Lettuce, Broccoli, Tomatoes, Tofu)" className="form-control" value={value} onChange={(e) => handleChange(e)} />
 			</form>
 			<div className="row">
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
-				<div className="col-4 mb-3">
-					<div className="card">
-						<div className="card-body">
-							<p>Rice</p>
-							<p>
-								160 Calories, Jasmine, 1 Cup, 6g Protein, 5g Carbs, 10g
-								Fats
-							</p>
-						</div>
-						<div className="card-footer">
-							<Link to={"/addfood"}>
-								<button className="btn btn-primary">Add</button>
-							</Link>
-						</div>
-					</div>
-				</div>
+				<p>Search Results</p>
+			</div>
+			<div className="row">
+			<RenderFoods foodResults={foodResults} />
 			</div>
 		</div>
 	);
 };
 
-export default AddIngredient;
+const mapStateToProps = (state) => {
+	return { foods: state.foods };
+};
+
+export default connect(mapStateToProps, {
+	searchedFood: searchedFood
+})(AddIngredient);

@@ -13,7 +13,7 @@ const RenderFoods = (props) => {
 	const objectMap = () =>
 		props.foodResults.foods.map((food) => {
 			return (
-				<div className="col-3">
+				<div className="col-4">
 					<div className="card">
 						<div className="card-body">
                      <p>{food.brandName}</p>
