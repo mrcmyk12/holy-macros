@@ -1,20 +1,64 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+
+import CaloriesCard from "./NutrientCards/CaloriesCard";
+import CarbohydratesCard from "./NutrientCards/CarbohydratesCard";
+import ProteinCard from "./NutrientCards/ProteinCard";
+import FatsCard from "./NutrientCards/FatsCard";
+import RenderNutrients from "./RenderNutrients";
 
 const AddFood = () => {
+	const location = useLocation();
+	console.log(location.state.food);
+	const food = location.state.food;
+
+	const renderServingSize = () => {
+
+		if (food.servingSize) {
+			return (
+				<div>
+					{food.servingSize} {food.servingSizeUnit}
+				</div>
+			);
+		}
+		
+			let servingsArray = [];
+
+			for (let i = 0; i < food.foodMeasures.length; i++) {
+				servingsArray.push(food.foodMeasures[i].disseminationText);
+			}
+
+			const servings = servingsArray.map((serving) => {
+				if(serving === "Quantity not specified"){
+					return(
+						<div></div>
+					)
+				}
+
+				return <div>{serving}</div>;
+			});
+		
+			return(
+				<div>{servings}</div>
+			)
+
+	
+	};
+
 	return (
 		<div className="container">
 			<form>
-			<div className="row">
-				<div className="col-10">
-					<p>Rice</p>
+				<div className="row">
+					<div className="col-10">
+						<p>{food.description}</p>
+					</div>
+					<div className="col-2">
+						<input
+							type={"submit"}
+							className="form-control btn btn-primary"
+						/>
+					</div>
 				</div>
-				<div className="col-2">
-					<input
-						type={"submit"}
-						className="form-control btn btn-primary"
-					/>
-				</div>
-			</div>
 				<div className="row">
 					<div className="col">
 						<label className="form-label">Date</label>
@@ -49,41 +93,21 @@ const AddFood = () => {
 					</div>
 					<div className="col">
 						<p>Serving Size</p>
-						<p>1 Cup</p>
+						{renderServingSize()}
 					</div>
 				</div>
 				<div className="row">
 					<div className="col-3 mb-5">
-						<div className="card">
-							<div className="card-body">
-								<p>100 Calories</p>
-								<p>160% of daily allowance</p>
-							</div>
-						</div>
+						<CaloriesCard nutrients={food.foodNutrients} />
 					</div>
 					<div className="col-3 mb-5">
-						<div className="card">
-							<div className="card-body">
-								<p>100g Carbohydrates</p>
-								<p>50% of daily allowance</p>
-							</div>
-						</div>
+						<CarbohydratesCard nutrients={food.foodNutrients} />
 					</div>
 					<div className="col-3 mb-5">
-						<div className="card">
-							<div className="card-body">
-								<p>104g Protein</p>
-								<p>15% of daily allowance</p>
-							</div>
-						</div>
+						<ProteinCard nutrients={food.foodNutrients} />
 					</div>
 					<div className="col-3 mb-5">
-						<div className="card">
-							<div className="card-body">
-								<p>14g Fat</p>
-								<p>25% of daily allowance</p>
-							</div>
-						</div>
+						<FatsCard nutrients={food.foodNutrients} />
 					</div>
 				</div>
 
@@ -137,75 +161,8 @@ const AddFood = () => {
 			<div className="row">
 				<p>Other Nutrition Facts</p>
 			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
-			</div>
-			<div className="row">
-				<div className="col-8">Vitamin A</div>
-				<div className="col-4">18g</div>
-				<hr />
+			<div>
+				<RenderNutrients nutrients={food.foodNutrients} />
 			</div>
 		</div>
 	);
